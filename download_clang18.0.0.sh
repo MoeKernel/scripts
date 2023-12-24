@@ -7,6 +7,7 @@
 version="Clang-18.0.0git-20231224-release"
 clang_gz="Clang-18.0.0git-20231224.tar.gz"
 url="https://github.com/ZyCromerZ/Clang/releases/download/$version/$clang_gz"
+output_file="$clang_gz"
 destination_dir="$HOME/tc/clang-18.0.0"
 
 if ! command -v curl &>/dev/null; then
