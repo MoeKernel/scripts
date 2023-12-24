@@ -4,8 +4,8 @@
 #   By Akari Nyan - © 2023
 # ----------------------------- 
 
-version="18.0.0-20231128-release"
-clang_gz="Clang-18.0.0-20231128.tar.gz"
+version="Clang-18.0.0git-20231224"
+clang_gz="Clang-18.0.0git-20231224.tar.gz"
 url="https://github.com/ZyCromerZ/Clang/releases/download/$version/$clang_gz"
 
 output_file="$clang_gz"
@@ -33,4 +33,3 @@ if [ $? -eq 0 ]; then
 else
   echo "The extraction of the zip was failed!"
 fi
-
