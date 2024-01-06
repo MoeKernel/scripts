@@ -2,18 +2,15 @@
 #
 # Compile script for MoeKernel🐇
 # Copyright (C) 2020-2021 Adithya R.
+# Co-developer/edited (C) 2023-2024 Akari Azusagawa.
 
-SECONDS=0 # builtin bash timer
-ZIPNAME="Moe-$(date '+%Y%m%d').zip"
+SECONDS=0
+ZIPNAME="MoeNO-KSU-$(date '+%Y%m%d').zip"
 TC_DIR="$HOME/tc/clang-r498229"
 GCC_64_DIR="$HOME/tc/aarch64-linux-android-4.9"
 GCC_32_DIR="$HOME/tc/arm-linux-androideabi-4.9"
 AK3_DIR="$HOME/android/AnyKernel3"
 DEFCONFIG="vendor/Moe_defconfig"
-
-if test -z "$(git rev-parse --show-cdup 2>/dev/null)" && head=$(git rev-parse --verify HEAD 2>/dev/null); then
-    ZIPNAME="${ZIPNAME::-4}-$(echo $head | cut -c1-8).zip"
-fi
 
 export PATH="$TC_DIR/bin:$PATH"
 
@@ -102,7 +99,6 @@ if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && \
     rm -rf out/arch/arm64/boot
     echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
     echo "Zip: $ZIPNAME"
-    # curl --upload-file $ZIPNAME https://temp.sh/$ZIPNAME; echo
 else
     echo -e "\nCompilation failed!"
     exit 1
