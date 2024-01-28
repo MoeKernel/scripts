@@ -4,14 +4,9 @@
 #   By Akari Nyan - © 2023
 # ----------------------------- 
 
-# Sets the default option
 tag="stable"
-
-# Sets the default option
-# to remove the KPROBES warning
 remove_kprobes_warning="y"
 
-# Process command line arguments
 while getopts "t:k:h" opt; do
   case $opt in
     t)
@@ -38,7 +33,6 @@ while getopts "t:k:h" opt; do
   esac
 done
 
-# Defines the command to be executed based on the selected tag
 if [ "$tag" = "stable" ]; then
   rm -rf KernelSU
   cmd="bash -"
@@ -52,9 +46,6 @@ fi
 
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | $cmd
 
-# Remove KPROBES dependency warning 
-# if option is set to "y"
-# Default: y (yes)
 if [ "$remove_kprobes_warning" = "y" ]; then
   sed -i '59,60d' KernelSU/kernel/ksu.c
 fi
