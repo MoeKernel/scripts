@@ -97,6 +97,15 @@ async def message_compile(bot: Client, msg: Message):
 
         completion_message = f"\nCompleted in {elapsed_minutes_formatted} minute(s) and {elapsed_seconds} second(s) !"
         completed_compile_text = f"**Compilation completed!**\n\nCommit: {commit_link}\n{completion_message}"
+
+        build_info = f"**ginkgo build (#{build_count}) has succeeded**\n" \
+            f"**Kernel Version**: {kernel_version}\n" \
+            f"**Build Type**: `{build_type}` **(KSU)**\n" \
+            f"**Tag**: `{tag}`\n" \
+            f"\n" \
+            f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
+            f"\n" \
+            f"\n@MoeKernel #ginkgo #ksu"
         
         await start_message.edit_text(text=completed_compile_text)
 
@@ -115,6 +124,11 @@ async def message_compile(bot: Client, msg: Message):
                 caption=caption,
                 parse_mode=ParseMode.MARKDOWN
             )
+        await bot.send_message(
+            "@MoeNyanCI",
+            build_info,
+            parse_mode=ParseMode.MARKDOWN
+        )
         sys.exit(0)
 
     else:
