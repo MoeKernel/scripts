@@ -85,7 +85,7 @@ async def message_compile(bot: Client, msg: Message):
         
         message_commit = subprocess.check_output("git log --oneline -1", shell=True).decode().strip().split(" ")[1:]
         commit_text = " ".join(message_commit)
-        commit_link = f'<a href="https://github.com/whyakari/kernel_moe_pixelos/commit/{commit_hash}">{commit_head}</a>'
+        commit_link = f'<a href="https://github.com/MoeKernel/android_kernel_xiaomi_ginkgo/commit/{commit_hash}">{commit_head}</a>'
 
         elapsed_time = int(time.perf_counter() - start_time)
         elapsed_minutes = elapsed_time // 60
