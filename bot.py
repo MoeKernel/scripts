@@ -30,6 +30,16 @@ app = Client(
     bot_token=bot_token
 )
 
+if os.path.isfile("build_counter.txt"):
+    with open("build_counter.txt", "r") as file:
+        build_count = int(file.read())
+else:
+    build_count = 0
+build_count += 1
+
+with open("build_counter.txt", "w") as file:
+    file.write(str(build_count))
+
 commit_head = subprocess.check_output(
     "git log --oneline -1 --pretty=format:'%h - %an'", 
     shell=True).decode().strip()
