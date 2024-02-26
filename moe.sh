@@ -1,16 +1,14 @@
 #!/bin/bash
-#
-# Compile script for MoeKernel🐇
+# Compile script for MoeKernel
 # Copyright (C) 2020-2021 Adithya R.
-# Co-developer/edited (C) 2023-2024 Akari Azusagawa.
 
 SECONDS=0
 ZIPNAME="MoeKSU-$(date '+%Y%m%d').zip"
-TC_DIR="$HOME/tc/clang-r498229"
-GCC_64_DIR="$HOME/tc/aarch64-linux-android-4.9"
-GCC_32_DIR="$HOME/tc/arm-linux-androideabi-4.9"
+TC_DIR="$HOME/tc/clang-19.0.0"
+GCC_64_DIR="$HOME/tc/aarch64-linux-android-14.0"
+GCC_32_DIR="$HOME/tc/arm-linux-androideabi-14.0"
 AK3_DIR="$HOME/android/AnyKernel3"
-DEFCONFIG="vendor/Moe_defconfig"
+DEFCONFIG="vendor/moe_defconfig"
 
 export PATH="$TC_DIR/bin:$PATH"
 
@@ -19,7 +17,7 @@ export KBUILD_BUILD_HOST=Nyan
 
 if ! [ -d "${TC_DIR}" ]; then
     echo "Clang not found! Cloning to ${TC_DIR}..."
-    if ! git clone --depth=1 https://gitlab.com/moehacker/clang-r498229 ${TC_DIR}; then
+    if ! git clone --depth=1 https://gitlab.com/moehacker/clang-r498229b ${TC_DIR}; then
         echo "Cloning failed! Aborting..."
         exit 1
     fi
@@ -27,7 +25,7 @@ fi
 
 if ! [ -d "${GCC_64_DIR}" ]; then
     echo "gcc not found! Cloning to ${GCC_64_DIR}..."
-    if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
+    if ! git clone --depth=1 -b 14 https://github.com/ZyCromerZ/aarch64-zyc-linux-gnu ${GCC_64_DIR}; then
         echo "Cloning failed! Aborting..."
         exit 1
     fi
@@ -35,7 +33,7 @@ fi
 
 if ! [ -d "${GCC_32_DIR}" ]; then
     echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
-    if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${GCC_32_DIR}; then
+    if ! git clone --depth=1 -b 14 https://github.com/ZyCromerZ/arm-zyc-linux-gnueabi ${GCC_32_DIR}; then
         echo "Cloning failed! Aborting..."
         exit 1
     fi
@@ -84,7 +82,7 @@ if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && \
     echo -e "\nKernel compiled successfully! Zipping up...\n"
     if [ -d "$AK3_DIR" ]; then
         cp -r $AK3_DIR AnyKernel3
-    elif ! git clone -q https://github.com/whyakari/AnyKernel3; then
+    elif ! git clone -q https://github.com/MoeKernel/AnyKernel3; then
         echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
         exit 1
     fi
