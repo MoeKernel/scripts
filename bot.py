@@ -77,10 +77,10 @@ async def message_compile(bot: Client, msg: Message):
         "Compilation started... please wait."
     )
 
-    return_code = subprocess.call(
-        "./ksu_update.sh -t stable -k y", 
-        shell=True
-    )
+    """ return_code = subprocess.call( """
+    """     "./ksu_update.sh -t stable -k y",  """
+    """     shell=True """
+    """ ) """
     return_code = subprocess.call(
         "./moe.sh", 
         shell=True
@@ -110,12 +110,12 @@ async def message_compile(bot: Client, msg: Message):
 
         build_info = f"**ginkgo build (#{build_count}) has succeeded**\n" \
             f"**Kernel Version**: {kernel_version}\n" \
-            f"**Build Type**: `{build_type}` **(KSU/Dynamic)**\n" \
+            f"**Build Type**: `{build_type}` **(NO-KSU/Dynamic)**\n" \
             f"**Tag**: `{tag}`\n" \
             f"\n" \
             f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
             f"\n" \
-            f"\n@MoeKernel #ginkgo #ksu #dynamic"
+            f"\n@MoeKernel #ginkgo #non_ksu #dynamic"
  
         await start_message.edit_text(text=completed_compile_text)
 
