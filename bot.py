@@ -110,12 +110,12 @@ async def message_compile(bot: Client, msg: Message):
 
         build_info = f"**ginkgo build (#{build_count}) has succeeded**\n" \
             f"**Kernel Version**: {kernel_version}\n" \
-            f"**Build Type**: `{build_type}` **(KSU)**\n" \
+            f"**Build Type**: `{build_type}` **(KSU/Dynamic/PixelOS)**\n" \
             f"**Tag**: `{tag}`\n" \
             f"\n" \
             f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
             f"\n" \
-            f"\n@MoeKernel #ginkgo #ksu"
+            f"\n@MoeKernel #ginkgo #ksu #dynamic #pixelos"
         
         await start_message.edit_text(text=completed_compile_text)
 
