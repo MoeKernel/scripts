@@ -77,10 +77,10 @@ async def message_compile(bot: Client, msg: Message):
         "Compilation started... please wait."
     )
 
-    return_code = subprocess.call(
-        "./ksu_update.sh -t stable -k y", 
-        shell=True
-    )
+    #return_code = subprocess.call(
+    #    "./ksu_update.sh -t stable -k y", 
+    #    shell=True
+    #)
     return_code = subprocess.call(
         "./moe.sh", 
         shell=True
