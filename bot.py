@@ -78,7 +78,7 @@ async def message_compile(bot: Client, msg: Message):
     )
 
     return_code = subprocess.call(
-        "./ksu_update.sh -t stable -k y", 
+        "./ksu_update.sh -t stable", 
         shell=True
     )
     return_code = subprocess.call(
