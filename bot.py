@@ -37,6 +37,9 @@ else:
     build_count = 0
 build_count += 1
 
+with open("build_count.txt", "w") as file:
+    file.write(str(build_count))
+
 commit_head = subprocess.check_output(
     "git log --oneline -1 --pretty=format:'%h - %an'", 
     shell=True).decode().strip()
@@ -103,12 +106,12 @@ async def message_compile(bot: Client, msg: Message):
 
         build_info = f"**ginkgo build (#{build_count}) has succeeded**\n" \
             f"**Kernel Version**: {kernel_version}\n" \
-            f"**Build Type**: `{build_type}` **(NO-KSU)**\n" \
+            f"**Build Type**: `{build_type}` **(NO_KSU//Fourteen)**\n" \
             f"**Tag**: `{tag}`\n" \
             f"\n" \
             f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
             f"\n" \
-            f"\n@MoeKernel #ginkgo #non_ksu"
+            f"\n@MoeKernel #ginkgo #no_ksu"
         
         await start_message.edit_text(text=completed_compile_text)
 
