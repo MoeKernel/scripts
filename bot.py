@@ -106,7 +106,7 @@ async def message_compile(bot: Client, msg: Message):
 
         build_info = f"**ginkgo build (#{build_count}) has succeeded**\n" \
             f"**Kernel Version**: {kernel_version}\n" \
-            f"**Build Type**: `{build_type}` **(NO_KSU//Fourteen)**\n" \
+            f"**Build Type**: `{build_type}` **(NO_KSU/Fourteen)**\n" \
             f"**Tag**: `{tag}`\n" \
             f"\n" \
             f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
