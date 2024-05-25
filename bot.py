@@ -111,7 +111,7 @@ async def message_compile(bot: Client, msg: Message):
             f"\n" \
             f"**Duration**: {elapsed_minutes} Minutes {elapsed_seconds} Seconds" \
             f"\n" \
-            f"\n@MoeKernel #ginkgo #no_ksu"
+            f"\n@MoeKernel #ginkgo #noKSU"
         
         await start_message.edit_text(text=completed_compile_text)
 
