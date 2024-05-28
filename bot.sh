@@ -7,11 +7,6 @@ else
     exit 1
 fi
 
-export CHAT_ID="${CHAT_ID:-}"
-export API_ID="${API_ID:-}"
-export API_HASH="${API_HASH:-}"
-export BOT_TOKEN="${BOT_TOKEN:-}"
-
 if [[ -z "$CHAT_ID" || -z "$API_ID" || -z "$API_HASH" || -z "$BOT_TOKEN" ]]; then
     echo "Erro: Variáveis de ambiente não foram definidas corretamente."
     exit 1
@@ -29,7 +24,9 @@ commit_head=$(git log --oneline -1 --pretty=format:'%h - %an')
 commit_id=$(git log --oneline -1 --pretty=format:'%h')
 author_name=$(echo $commit_head | cut -d ' ' -f 3-)
 commit_hash=$(echo $commit_head | cut -d ' ' -f 1)
+
 kernel_version=$(make kernelversion 2>/dev/null)
+
 build_type="release"
 tag="ginkgo_${commit_hash:0:7}_$(date +%Y%m%d)"
 
@@ -97,7 +94,7 @@ if [[ $? -eq 0 ]]; then
 else
     curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
         -d chat_id=$CHAT_ID \
-        -d text="No zip files found in the current directory." \
+        -d text="Compilation failed." \
         -d parse_mode="Markdown"
     exit 1
 fi
