@@ -37,8 +37,8 @@ tag="ginkgo_${commit_hash:0:7}_$(date +%Y%m%d)"
 
 start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
     -d chat_id=$CHAT_ID \
-    -d text="Compilation started... please wait." \
-    -d parse_mode="HTML")
+    -d text="*Compilation started... please wait.*" \
+    -d parse_mode="Markdown")
 
 start_time=$(date +%s)
 
