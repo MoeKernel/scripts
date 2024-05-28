@@ -91,6 +91,23 @@ EOF
 EOF
 )
 
+	zip_file=$(ls *.zip | head -n 1)
+    if [[ -n "$zip_file" ]]; then
+		caption=$(cat <<EOF
+*Build Info*
+
+• *Commit*: \`${commit_id}\`
+• *Message*: \`${commit_text}\`
+• *Author*: \`${author_name}\`
+EOF
+)
+        curl -s -F chat_id=$CHAT_ID \
+            -F document=@"$zip_file" \
+            -F caption="$caption" \
+            -F parse_mode="Markdown" \
+            "https://api.telegram.org/bot$BOT_TOKEN/sendDocument"
+    fi
+
     message_id=$(echo $start_message | jq .result.message_id)
     curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/editMessageText" \
         -d chat_id=$CHAT_ID \
