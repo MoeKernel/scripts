@@ -7,6 +7,11 @@ else
     exit 1
 fi
 
+export CHAT_ID="${CHAT_ID:-}"
+export API_ID="${API_ID:-}"
+export API_HASH="${API_HASH:-}"
+export BOT_TOKEN="${BOT_TOKEN:-}"
+
 if [[ -z "$CHAT_ID" || -z "$API_ID" || -z "$API_HASH" || -z "$BOT_TOKEN" ]]; then
     echo "Erro: Variáveis de ambiente não foram definidas corretamente."
     exit 1
