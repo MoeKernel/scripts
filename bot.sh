@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [[ -f ".env" ]]; then
+    source .env
+else
+    echo "Erro: Arquivo .env não encontrado."
+    exit 1
+fi
+
 export CHAT_ID="${CHAT_ID:-}"
 export API_ID="${API_ID:-}"
 export API_HASH="${API_HASH:-}"
