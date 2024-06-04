@@ -38,4 +38,4 @@ else
   exit 1
 fi
 
-curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | $cmd
+curl -LSs "https://raw.githubusercontent.com/whyakari/KernelSU/nongki/kernel/setup.sh" | $cmd
