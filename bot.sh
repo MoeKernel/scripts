@@ -82,12 +82,12 @@ EOF
     build_info=$(cat <<EOF
 *ginkgo build (#${build_count}) has succeeded*
 *Kernel Version*: ${kernel_version}
-*Build Type*: \`${build_type}\` *(KSU/Fourteen)*
+*Build Type*: \`${build_type}\` *(KSU/Fourteen/openela)*
 *Tag*: \`${tag}\`
 
 *Duration*: ${elapsed_minutes} Minutes ${elapsed_seconds} Seconds
 
-@MoeKernel #ginkgo #ksu
+@MoeKernel #ginkgo #ksu #openela
 EOF
 )
 
