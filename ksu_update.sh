@@ -38,11 +38,4 @@ else
   exit 1
 fi
 
-curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | $cmd
-
-# Remove KPROBES dependency warning 
-# if option is set to "y"
-# Default: y (yes)
-# if [ "$remove_kprobes_warning" = "y" ]; then
-#   sed -i '59,60d' KernelSU/kernel/ksu.c
-# fi
+curl -LSs "https://raw.githubusercontent.com/whyakari/KernelSU/nongki/kernel/setup.sh" | $cmd
