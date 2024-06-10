@@ -5,8 +5,8 @@
 SECONDS=0
 ZIPNAME="MoeKSU-$(date '+%Y%m%d').zip"
 TC_DIR="$HOME/tc/clang-19.0.0"
-GCC_64_DIR="$HOME/tc/aarch64-linux-android-14.0"
-GCC_32_DIR="$HOME/tc/arm-linux-androideabi-14.0"
+GCC_64_DIR="$HOME/tc/aarch64-linux-android-15.0"
+GCC_32_DIR="$HOME/tc/arm-linux-androideabi-15.0"
 AK3_DIR="$HOME/android/AnyKernel3"
 DEFCONFIG="vendor/moe_defconfig"
 
@@ -25,7 +25,7 @@ fi
 
 if ! [ -d "${GCC_64_DIR}" ]; then
     echo "gcc not found! Cloning to ${GCC_64_DIR}..."
-    if ! git clone --depth=1 -b 14 https://github.com/ZyCromerZ/aarch64-zyc-linux-gnu ${GCC_64_DIR}; then
+    if ! git clone --depth=1 -b 15 https://github.com/whyakari/aarch64-zyc-linux-gnu ${GCC_64_DIR}; then
         echo "Cloning failed! Aborting..."
         exit 1
     fi
@@ -33,7 +33,7 @@ fi
 
 if ! [ -d "${GCC_32_DIR}" ]; then
     echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
-    if ! git clone --depth=1 -b 14 https://github.com/ZyCromerZ/arm-zyc-linux-gnueabi ${GCC_32_DIR}; then
+    if ! git clone --depth=1 -b 15 https://github.com/whyakari/arm-zyc-linux-gnueabi ${GCC_32_DIR}; then
         echo "Cloning failed! Aborting..."
         exit 1
     fi
