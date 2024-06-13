@@ -60,6 +60,10 @@ def write_stored_version(version):
     with open(VERSION_FILE, 'w') as file:
         file.write(version)
 
+    run_git_command("git add kernelversion.txt", "scripts")
+    run_git_command(f"git commit -m 'Update kernel version to {version}'", "scripts")
+    run_git_command("git push origin", "scripts")
+
 def check_for_new_version():
     latest_commit_message = get_latest_commit_message()
     if latest_commit_message:
