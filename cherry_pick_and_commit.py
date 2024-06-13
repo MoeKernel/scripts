@@ -19,7 +19,7 @@ def get_latest_openela_commit():
 
 def clone_kernel_repo():
     if os.path.exists(KERNEL_REPO_DIR):
-        run_git_command("git fetch", KERNEL_REPO_DIR)
+        run_git_command("git fetch origin", KERNEL_REPO_DIR)
     else:
         run_git_command(f"git clone --depth=1 {KERNEL_REPO_URL} {KERNEL_REPO_DIR}", ".")
 
@@ -33,15 +33,15 @@ def run_git_command(command, repo_dir):
 def fetch_openela_commits():
     latest_commit = get_latest_openela_commit()
     if latest_commit:
-        return run_git_command(f"git fetch {OPENELA_API_URL} {KERNEL_BRANCH}", KERNEL_REPO_DIR)
+        return run_git_command(f"git fetch https://github.com/openela/kernel-lts.git {KERNEL_BRANCH}:refs/remotes/origin/{KERNEL_BRANCH}", KERNEL_REPO_DIR)
     else:
         print("Failed to fetch latest OpenELA commit.")
         return False
 
 def cherry_pick_openela_commits():
-    result = run_git_command(f"git log {KERNEL_BRANCH}..FETCH_HEAD --pretty=format:%H", KERNEL_REPO_DIR)
+    result = run_git_command(f"git log origin/{KERNEL_BRANCH}..HEAD --pretty=format:%H", KERNEL_REPO_DIR)
     if result:
-        commits = result.split('\n')
+        commits = result.stdout.strip().split('\n')
         for commit in commits:
             if not run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR):
                 print(f"Conflict with commit {commit}, skipping...")
