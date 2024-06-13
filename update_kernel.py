@@ -80,9 +80,11 @@ def filter_new_commits(commits, stored_version):
     new_commits = []
     for commit in commits:
         commit_message = commit['commit']['message']
+        print(f"Checking commit: {commit_message}")  # Log commit messages
         if stored_version not in commit_message:
             new_commits.append(commit)
         else:
+            print(f"Stopping at commit: {commit_message}")  # Log the commit where we stop
             break
     return new_commits
 
@@ -95,10 +97,10 @@ if __name__ == "__main__":
             openela_commits = get_latest_openela_commits()
             stored_version = read_stored_version()
             new_commits = filter_new_commits(openela_commits, stored_version)
+            print(f"New commits to cherry-pick: {[commit['sha'] for commit in new_commits]}")  # Log new commits
             if new_commits:
                 cherry_pick_openela_commits(new_commits)
             else:
                 print("No new commits to cherry-pick.")
         else:
             print("Failed to fetch OpenELA commits.")
-
