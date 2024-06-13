@@ -1,12 +1,20 @@
-import subprocess
-import requests
 import os
+import requests
+import subprocess
+from dotenv import load_dotenv
 
 OPENELA_API_URL = "https://api.github.com/repos/whyakari/kernel-lts/commits?sha=linux-4.14.y"
 KERNEL_REPO_URL = "https://github.com/MoeKernel/android_kernel_xiaomi_ginkgo.git"
 KERNEL_BRANCH = "linux-4.14.y"
 KERNEL_REPO_DIR = "kernel_repo"
-VERSION_FILE = "kernelversion.txt"
+VERSION_FILE_PATH = "kernelversion.txt"
+SCRIPTS_REPO_URL = "https://github.com/MoeKernel/scripts.git"
+
+load_dotenv()
+
+TOKEN_GITHUB = os.getenv('TOKEN_GITHUB', '')
+USER = "MoeKernel"
+REPO = "scripts"
 
 def get_latest_openela_commits():
     response = requests.get(OPENELA_API_URL)
@@ -51,18 +59,29 @@ def extract_version_from_commit_message(message):
     return None
 
 def read_stored_version():
-    if os.path.exists(VERSION_FILE):
-        with open(VERSION_FILE, 'r') as file:
+    if os.path.exists(VERSION_FILE_PATH):
+        with open(VERSION_FILE_PATH, 'r') as file:
             return file.read().strip()
     return None
 
 def write_stored_version(version):
-    with open(VERSION_FILE, 'w') as file:
+    with open(VERSION_FILE_PATH, 'w') as file:
         file.write(version)
 
     run_git_command("git add kernelversion.txt", ".")
     run_git_command(f"git commit -m 'Update kernel version to {version}'", ".")
     run_git_command("git push origin ksu --force")
+
+def commit_and_push_version(version):
+    url_remoto = f'https://{USER}:{TOKEN_GITHUB}@github.com/{USER}/{REPO}.git'
+    subprocess.run(["git", "remote", "set-url", "origin", url_remoto])
+    subprocess.run(["git", "config", "--global", "user.email", "akariondev@gmail.com"])
+    subprocess.run(["git", "config", "--global", "user.name", "ginkgo"])
+
+    # Adicionar, commitar e enviar o arquivo de versão
+    subprocess.run(["git", "add", VERSION_FILE_PATH])
+    subprocess.run(["git", "commit", "-m", f"Update kernel version to {version}"])
+    subprocess.run(["git", "push"])
 
 def check_for_new_version():
     latest_commit_message = get_latest_commit_message()
@@ -73,9 +92,12 @@ def check_for_new_version():
             if stored_version != latest_version:
                 print(f"New version available: {latest_version}")
                 write_stored_version(latest_version)
+                commit_and_push_version(latest_version)
                 return latest_version
             else:
                 print("No new version available.")
+        else:
+            print("Failed to extract version from commit message.")
     else:
         print("Failed to fetch the latest commit message.")
     return None
@@ -110,6 +132,6 @@ if __name__ == "__main__":
             print("Failed to fetch OpenELA commits.")
     else:
         # If there's no new version, ensure the VERSION_FILE is created if it doesn't exist
-        if not os.path.exists(os.path.join(KERNEL_REPO_DIR, VERSION_FILE)):
+        if not os.path.exists(os.path.join(KERNEL_REPO_DIR, VERSION_FILE_PATH)):
             clone_kernel_repo()
             write_stored_version(read_stored_version())
