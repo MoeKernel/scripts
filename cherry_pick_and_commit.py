@@ -8,14 +8,13 @@ KERNEL_BRANCH = "linux-4.14.y"
 KERNEL_REPO_DIR = "kernel_repo"
 VERSION_FILE = "kernelversion.txt"
 
-def get_latest_openela_commit():
+def get_latest_openela_commits():
     response = requests.get(OPENELA_API_URL)
     if response.status_code == 200:
         commits = response.json()
         if commits:
-            latest_commit = commits[0]
-            return latest_commit['sha']
-    return None
+            return commits
+    return []
 
 def clone_kernel_repo():
     if os.path.exists(KERNEL_REPO_DIR):
@@ -30,32 +29,20 @@ def run_git_command(command, repo_dir):
     return True, result.stdout, result.stderr
 
 def fetch_openela_commits():
-    latest_commit = get_latest_openela_commit()
-    if latest_commit:
-        return run_git_command(f"git fetch https://github.com/openela/kernel-lts.git {KERNEL_BRANCH}:refs/remotes/origin/{KERNEL_BRANCH}", KERNEL_REPO_DIR)
-    else:
-        print("Failed to fetch latest OpenELA commit.")
-        return False, None, None
+    return run_git_command(f"git fetch https://github.com/openela/kernel-lts.git {KERNEL_BRANCH}:refs/remotes/origin/{KERNEL_BRANCH}", KERNEL_REPO_DIR)
 
-def cherry_pick_openela_commits():
-    success, stdout, stderr = run_git_command(f"git log origin/{KERNEL_BRANCH}..HEAD --pretty=format:%H", KERNEL_REPO_DIR)
-    if success:
-        commits = stdout.strip().split('\n')
-        for commit in commits:
-            success, _, stderr = run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR)
-            if not success:
-                print(f"Conflict with commit {commit}, skipping...")
-                run_git_command("git cherry-pick --skip", KERNEL_REPO_DIR)
-    else:
-        print(f"Error: {stderr}")
+def cherry_pick_openela_commits(new_commits):
+    for commit in new_commits:
+        success, _, stderr = run_git_command(f"git cherry-pick {commit['sha']}", KERNEL_REPO_DIR)
+        if not success:
+            print(f"Conflict with commit {commit['sha']}, skipping...")
+            run_git_command("git cherry-pick --skip", KERNEL_REPO_DIR)
 
 def get_latest_commit_message():
-    response = requests.get(OPENELA_API_URL)
-    if response.status_code == 200:
-        commits = response.json()
-        if commits:
-            latest_commit = commits[0]
-            return latest_commit['commit']['message']
+    commits = get_latest_openela_commits()
+    if commits:
+        latest_commit = commits[0]
+        return latest_commit['commit']['message']
     return None
 
 def extract_version_from_commit_message(message):
@@ -82,19 +69,36 @@ def check_for_new_version():
             if stored_version != latest_version:
                 print(f"New version available: {latest_version}")
                 write_stored_version(latest_version)
-                return True
+                return latest_version
             else:
                 print("No new version available.")
     else:
         print("Failed to fetch the latest commit message.")
-    return False
+    return None
+
+def filter_new_commits(commits, stored_version):
+    new_commits = []
+    for commit in commits:
+        commit_message = commit['commit']['message']
+        if stored_version not in commit_message:
+            new_commits.append(commit)
+        else:
+            break
+    return new_commits
 
 if __name__ == "__main__":
-    if check_for_new_version():
+    latest_version = check_for_new_version()
+    if latest_version:
         clone_kernel_repo()
         success, _, _ = fetch_openela_commits()
         if success:
-            cherry_pick_openela_commits()
+            openela_commits = get_latest_openela_commits()
+            stored_version = read_stored_version()
+            new_commits = filter_new_commits(openela_commits, stored_version)
+            if new_commits:
+                cherry_pick_openela_commits(new_commits)
+            else:
+                print("No new commits to cherry-pick.")
         else:
             print("Failed to fetch OpenELA commits.")
 
