@@ -108,3 +108,8 @@ if __name__ == "__main__":
                 print("No new commits to cherry-pick.")
         else:
             print("Failed to fetch OpenELA commits.")
+    else:
+        # If there's no new version, ensure the VERSION_FILE is created if it doesn't exist
+        if not os.path.exists(os.path.join(KERNEL_REPO_DIR, VERSION_FILE)):
+            clone_kernel_repo()
+            write_stored_version(read_stored_version())
