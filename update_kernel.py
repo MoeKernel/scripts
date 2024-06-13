@@ -68,9 +68,7 @@ def write_stored_version(version):
     with open(VERSION_FILE_PATH, 'w') as file:
         file.write(version)
 
-    run_git_command(f"git add {VERSION_FILE_PATH}", KERNEL_REPO_DIR)
-    run_git_command(f"git commit -m 'Update kernel version to {version}'", KERNEL_REPO_DIR)
-    run_git_command("git push origin ksu --force", KERNEL_REPO_DIR)
+    print(f"Updated kernel version to {version}")
 
 def commit_and_push_version(version):
     url_remoto = f'https://{USER}:{TOKEN_GITHUB}@github.com/{USER}/{REPO}.git'
