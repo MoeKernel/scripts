@@ -26,7 +26,6 @@ def clone_kernel_repo():
 def run_git_command(command, repo_dir):
     result = subprocess.run(command, shell=True, cwd=repo_dir, capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"Error: {result.stderr}")
         return False, result.stdout, result.stderr
     return True, result.stdout, result.stderr
 
@@ -43,7 +42,7 @@ def cherry_pick_openela_commits():
     if success:
         commits = stdout.strip().split('\n')
         for commit in commits:
-            success, _, _ = run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR)
+            success, _, stderr = run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR)
             if not success:
                 print(f"Conflict with commit {commit}, skipping...")
                 run_git_command("git cherry-pick --skip", KERNEL_REPO_DIR)
