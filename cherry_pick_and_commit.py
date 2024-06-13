@@ -27,8 +27,8 @@ def run_git_command(command, repo_dir):
     result = subprocess.run(command, shell=True, cwd=repo_dir, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"Error: {result.stderr}")
-        return False
-    return True
+        return False, result.stdout, result.stderr
+    return True, result.stdout, result.stderr
 
 def fetch_openela_commits():
     latest_commit = get_latest_openela_commit()
@@ -36,16 +36,19 @@ def fetch_openela_commits():
         return run_git_command(f"git fetch https://github.com/openela/kernel-lts.git {KERNEL_BRANCH}:refs/remotes/origin/{KERNEL_BRANCH}", KERNEL_REPO_DIR)
     else:
         print("Failed to fetch latest OpenELA commit.")
-        return False
+        return False, None, None
 
 def cherry_pick_openela_commits():
-    result = run_git_command(f"git log origin/{KERNEL_BRANCH}..HEAD --pretty=format:%H", KERNEL_REPO_DIR)
-    if result:
-        commits = result.stdout.strip().split('\n')
+    success, stdout, stderr = run_git_command(f"git log origin/{KERNEL_BRANCH}..HEAD --pretty=format:%H", KERNEL_REPO_DIR)
+    if success:
+        commits = stdout.strip().split('\n')
         for commit in commits:
-            if not run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR):
+            success, _, _ = run_git_command(f"git cherry-pick {commit}", KERNEL_REPO_DIR)
+            if not success:
                 print(f"Conflict with commit {commit}, skipping...")
                 run_git_command("git cherry-pick --skip", KERNEL_REPO_DIR)
+    else:
+        print(f"Error: {stderr}")
 
 def get_latest_commit_message():
     response = requests.get(OPENELA_API_URL)
@@ -90,7 +93,8 @@ def check_for_new_version():
 if __name__ == "__main__":
     if check_for_new_version():
         clone_kernel_repo()
-        if fetch_openela_commits():
+        success, _, _ = fetch_openela_commits()
+        if success:
             cherry_pick_openela_commits()
         else:
             print("Failed to fetch OpenELA commits.")
