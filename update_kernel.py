@@ -62,7 +62,7 @@ def write_stored_version(version):
 
     run_git_command("git add kernelversion.txt", ".")
     run_git_command(f"git commit -m 'Update kernel version to {version}'", ".")
-    run_git_command("git push origin", ".")
+    run_git_command("git push origin ksu --force")
 
 def check_for_new_version():
     latest_commit_message = get_latest_commit_message()
