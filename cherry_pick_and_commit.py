@@ -33,7 +33,7 @@ def run_git_command(command, repo_dir):
 def fetch_openela_commits():
     latest_commit = get_latest_openela_commit()
     if latest_commit:
-        return run_git_command(f"git fetch {OPENELA_API_URL} {latest_commit}:{KERNEL_BRANCH}", KERNEL_REPO_DIR)
+        return run_git_command(f"git fetch {OPENELA_API_URL} {KERNEL_BRANCH}", KERNEL_REPO_DIR)
     else:
         print("Failed to fetch latest OpenELA commit.")
         return False
