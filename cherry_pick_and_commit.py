@@ -21,7 +21,7 @@ def clone_kernel_repo():
     if os.path.exists(KERNEL_REPO_DIR):
         run_git_command("git fetch", KERNEL_REPO_DIR)
     else:
-        run_git_command(f"git clone {KERNEL_REPO_URL} {KERNEL_REPO_DIR}", ".")
+        run_git_command(f"git clone --depth=1 {KERNEL_REPO_URL} {KERNEL_REPO_DIR}", ".")
 
 def run_git_command(command, repo_dir):
     result = subprocess.run(command, shell=True, cwd=repo_dir, capture_output=True, text=True)
