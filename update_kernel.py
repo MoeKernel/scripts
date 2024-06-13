@@ -2,7 +2,7 @@ import subprocess
 import requests
 import os
 
-OPENELA_API_URL = "https://github.com/whyakari/kernel-lts/commits?sha=linux-4.14.y"
+OPENELA_API_URL = "https://api.github.com/repos/whyakari/kernel-lts/commits?sha=linux-4.14.y"
 KERNEL_REPO_URL = "https://github.com/MoeKernel/android_kernel_xiaomi_ginkgo.git"
 KERNEL_BRANCH = "linux-4.14.y"
 KERNEL_REPO_DIR = "kernel_repo"
