@@ -5,8 +5,7 @@
 
 SECONDS=0
 ZIPNAME="MoeNOKSU-$(date '+%Y%m%d').zip"
-SECONDS=0
-TC_DIR="$HOME/tc/clang-19.0.0"
+TC_DIR="$HOME/tc/clang-20.0.0"
 GCC_64_DIR="$HOME/tc/aarch64-linux-android-15.0"
 GCC_32_DIR="$HOME/tc/arm-linux-androideabi-15.0"
 AK3_DIR="$HOME/android/AnyKernel3"
