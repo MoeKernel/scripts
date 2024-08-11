@@ -1,5 +1,5 @@
-4.14.349
+4.14.350
 
-This corresponds to 4.19.316 upstream (v4.19.315..v4.19.316).
+This corresponds to 4.19.317 upstream (v4.19.316..v4.19.317).
 
 Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
