@@ -33,7 +33,7 @@ commit_hash=$(echo $commit_head | cut -d ' ' -f 1)
 kernel_version=$(make kernelversion 2>/dev/null)
 
 build_type="release"
-tag="ginkgo_${commit_hash:0:7}_$(date +%Y%m%d)"
+tag="bangkk_${commit_hash:0:7}_$(date +%Y%m%d)"
 
 start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
     -d chat_id=$CHAT_ID \
@@ -55,7 +55,7 @@ if [[ $? -eq 0 ]]; then
     commit_text=$message_commit
 
 	commit_link=$(cat <<EOF
-[${commit_text}](https://github.com/MoeKernel/android_kernel_xiaomi_ginkgo/commit/${commit_hash})
+[${commit_text}](https://github.com/MoeKernel/android_kernel_motorola_bangkk/commit/${commit_hash})
 EOF
 )
 
@@ -80,14 +80,14 @@ EOF
 )
 	
     build_info=$(cat <<EOF
-*ginkgo build (#${build_count}) has succeeded*
+*bangkk build (#${build_count}) has succeeded*
 *Kernel Version*: ${kernel_version}
 *Build Type*: \`${build_type}\` *(KSU/Fourteen)*
 *Tag*: \`${tag}\`
 
 *Duration*: ${elapsed_minutes} Minutes ${elapsed_seconds} Seconds
 
-@MoeKernel #ginkgo #ksu
+@MoeKernel #bangkk #ksu
 EOF
 )
 
