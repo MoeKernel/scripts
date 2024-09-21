@@ -1,8 +1,4 @@
 #!/bin/bash
-# Compile script for MoeKernel
-# Copyright (C) 2020-2021 Adithya R.
-
-#!/bin/bash
 #
 # Compile script for MoeKernel
 # Copyright (C) 2024 Shoiya A.
