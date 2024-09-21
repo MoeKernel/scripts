@@ -2,52 +2,26 @@
 # Compile script for MoeKernel
 # Copyright (C) 2020-2021 Adithya R.
 
-SECONDS=0
-ZIPNAME="MoeKSU-$(date '+%Y%m%d').zip"
-TC_DIR="$HOME/tc/clang-20.0.0"
-GCC_64_DIR="$HOME/tc/aarch64-linux-android-15.0"
-GCC_32_DIR="$HOME/tc/arm-linux-androideabi-15.0"
-AK3_DIR="$HOME/android/AnyKernel3"
-DEFCONFIG="vendor/moe_defconfig"
+#!/bin/bash
+#
+# Compile script for MoeKernel
+# Copyright (C) 2024 Shoiya A.
 
-export PATH="$TC_DIR/bin:$PATH"
+SECONDS=0
+PATH=$PWD/toolchain/bin:$PATH
+
+export modpath=AnyKernel3/modules/vendor/lib/modules
+export ARCH=arm64
 
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
 
-if ! [ -d "${TC_DIR}" ]; then
-    echo "Clang not found! Cloning to ${TC_DIR}..."
-    if ! git clone --depth=1 https://gitlab.com/moehacker/clang-r498229b ${TC_DIR}; then
-        echo "Cloning failed! Aborting..."
-        exit 1
-    fi
-fi
+export LLVM_DIR=$PWD/toolchain/bin
+export LLVM=1
 
-if ! [ -d "${GCC_64_DIR}" ]; then
-    echo "gcc not found! Cloning to ${GCC_64_DIR}..."
-    if ! git clone --depth=1 -b 15 https://github.com/whyakari/aarch64-zyc-linux-gnu ${GCC_64_DIR}; then
-        echo "Cloning failed! Aborting..."
-        exit 1
-    fi
-fi
-
-if ! [ -d "${GCC_32_DIR}" ]; then
-    echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
-    if ! git clone --depth=1 -b 15 https://github.com/whyakari/arm-zyc-linux-gnueabi ${GCC_32_DIR}; then
-        echo "Cloning failed! Aborting..."
-        exit 1
-    fi
-fi
-
-if [[ $1 = "-r" || $1 = "--regen" ]]; then
-    make O=out ARCH=arm64 $DEFCONFIG savedefconfig
-    cp out/defconfig arch/arm64/configs/$DEFCONFIG
-    exit
-fi
-
-if [[ $1 = "-c" || $1 = "--clean" ]]; then
-    rm -rf out
-fi
+AK3_DIR="$HOME/AnyKernel3"
+DEFCONFIG="vendor/bangkk_defconfig"
+ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
 
 if [[ $1 = "-m" || $1 = "--menu" ]]; then
     mkdir -p out
@@ -60,44 +34,114 @@ else
     make O=out ARCH=arm64 $DEFCONFIG
 fi
 
-echo -e "\nStarting compilation... wait\n"
-make -j$(nproc --all) \
-    O=out \
-    ARCH=arm64 \
-    CC="ccache clang" \
-    LD=ld.lld \
-    AR=llvm-ar \
-    AS=llvm-as \
-    NM=llvm-nm \
-    OBJCOPY=llvm-objcopy \
-    OBJDUMP=llvm-objdump \
-    STRIP=llvm-strip \
-    CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- \
-    CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-linux-androideabi- \
-    CLANG_TRIPLE=aarch64-linux-gnu- \
-    Image.gz-dtb dtbo.img
+url_ksu_update="https://github.com/MoeKernel/scripts/raw/ksu/ksu_update.sh"
+url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
 
-if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && \
-   [ -f "out/arch/arm64/boot/dtbo.img" ]; then
-    echo -e "\nKernel compiled successfully! Zipping up...\n"
-    if [ -d "$AK3_DIR" ]; then
-        cp -r $AK3_DIR AnyKernel3
-    elif ! git clone -q https://github.com/MoeKernel/AnyKernel3; then
-        echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
-        exit 1
+file_ksu_update="$PWD/ksu_update.sh"
+file_init_clang="$PWD/init_clang.sh"
+
+download_chmod_and_execute() {
+    local url="$1"
+    local file="$2"
+
+    if [ ! -f "$file" ]; then
+        echo "File $file not found. Downloading..."
+        wget "$url" -O "$file"
+        if [ $? -eq 0 ]; then
+            echo "Download of $file completed."
+            chmod +x "$file"
+            echo "Execute permissions added to $file."
+        else
+            echo "Failed to download $file."
+            return 1
+        fi
+    else
+        echo "File $file already exists."
     fi
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
-    cp out/arch/arm64/boot/dtbo.img AnyKernel3
-    rm -f *zip
-    cd AnyKernel3
-    git checkout master &> /dev/null
-    zip -r9 "../$ZIPNAME" * -x '*.git*' README.md *placeholder
-    cd ..
-    rm -rf AnyKernel3
-    rm -rf out/arch/arm64/boot
-    echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
-    echo "Zip: $ZIPNAME"
-else
-    echo -e "\nCompilation failed!"
-    exit 1
+
+    echo "Executing $file..."
+    "$file"
+    if [ $? -eq 0 ]; then
+        echo "$file executed successfully."
+    else
+        echo "Failed to execute $file."
+    fi
+}
+
+download_chmod_and_execute "$url_ksu_update" "$file_ksu_update"
+download_chmod_and_execute "$url_init_clang" "$file_init_clang"
+
+ARGS='
+CC=clang
+LD='${LLVM_DIR}/ld.lld'
+ARCH=arm64
+AR='${LLVM_DIR}/llvm-ar'
+NM='${LLVM_DIR}/llvm-nm'
+AS='${LLVM_DIR}/llvm-as'
+OBJCOPY='${LLVM_DIR}/llvm-objcopy'
+OBJDUMP='${LLVM_DIR}/llvm-objdump'
+READELF='${LLVM_DIR}/llvm-readelf'
+OBJSIZE='${LLVM_DIR}/llvm-size'
+STRIP='${LLVM_DIR}/llvm-strip'
+LLVM_AR='${LLVM_DIR}/llvm-ar'
+LLVM_DIS='${LLVM_DIR}/llvm-dis'
+LLVM_NM='${LLVM_DIR}/llvm-nm'
+LLVM=1
+'
+
+if [[ $1 = "-r" || $1 = "--regen" ]]; then
+	make $ARGS $DEFCONFIG savedefconfig
+	cp out/defconfig arch/arm64/configs/$DEFCONFIG
+	echo -e "\nSuccessfully regenerated defconfig at $DEFCONFIG"
+	exit
 fi
+
+make ${ARGS} O=out $DEFCONFIG moto.config
+make ${ARGS} O=out -j$(nproc)
+
+[ ! -e "out/arch/arm64/boot/Image" ] && \
+echo "  ERROR : image binary not found in any of the specified locations , fix compile!" && \
+exit 1
+
+make O=out ${ARGS} -j$(nproc) INSTALL_MOD_PATH=modules INSTALL_MOD_STRIP=1 modules_install
+
+echo -e "\nKernel compiled succesfully! Zipping up...\n"
+if [ -d "$AK3_DIR" ]; then
+	cp -r $AK3_DIR AnyKernel3
+	git -C AnyKernel3 checkout bangkk &> /dev/null
+elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b bangkk; then
+	echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
+	exit 1
+fi
+
+mkdir -p ${modpath}
+kver=$(make kernelversion)
+kmod=$(echo ${kver} | awk -F'.' '{print $3}')
+
+mkdir -p AnyKernel3/modules/vendor/lib/modules 
+kver=$(make kernelversion)
+kmod=$(echo ${kver} | awk -F'.' '{print $3}')
+cp out/.config AnyKernel3/config
+cp out/arch/arm64/boot/Image AnyKernel3/Image
+cp out/arch/arm64/boot/dtb.img AnyKernel3/dtb
+cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
+# cp build.sta/${DEVICE}_modules.blocklist ${modpath}/modules.blocklist
+cp $(find out/modules/lib/modules/5.4* -name '*.ko') ${modpath}/
+cp out/modules/lib/modules/5.4*/modules.{alias,dep,softdep} ${modpath}/
+cp out/modules/lib/modules/5.4*/modules.order ${modpath}/modules.load
+
+sed -i 's/\(kernel\/[^: ]*\/\)\([^: ]*\.ko\)/\/vendor\/lib\/modules\/\2/g' ${modpath}/modules.dep
+sed -i 's/.*\///; s/\.ko$//' ${modpath}/modules.load
+
+source build.sta/${DEVICE}_mdconf
+for useles_modules in "${modules_to_nuke[@]}"; do
+  grep -vE "$useles_modules" ${modpath}/modules.load > /tmp/templd && mv /tmp/templd ${modpath}/modules.load
+done
+
+cd AnyKernel3
+zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
+cd ..
+echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
+echo "Zip: $ZIPNAME"
+curl -F "file=@$ZIPNAME" https://temp.sh/upload
+rm -rf AnyKernel3
