@@ -4,7 +4,7 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-PATH=$PWD/toolchain/bin:$PATH
+PATH=$HOME/tc/clang-20.0.0/bin:$PATH
 
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
@@ -12,7 +12,7 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
 
-export LLVM_DIR=$PWD/toolchain/bin
+export LLVM_DIR=$HOME/tc/clang-20.0.0/bin
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
