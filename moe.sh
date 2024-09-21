@@ -2,6 +2,7 @@
 #
 # Compile script for MoeKernel
 # Copyright (C) 2024 Shoiya A.
+
 SECONDS=0
 PATH=$PWD/toolchain/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
