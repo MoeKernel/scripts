@@ -42,7 +42,7 @@ start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMess
 
 start_time=$(date +%s)
 
-./ksu_update.sh
+#./ksu_update.sh
 ./moe.sh
 
 if [[ $? -eq 0 ]]; then
@@ -82,12 +82,12 @@ EOF
     build_info=$(cat <<EOF
 *bangkk build (#${build_count}) has succeeded*
 *Kernel Version*: ${kernel_version}
-*Build Type*: \`${build_type}\` *(KSU/Fourteen)*
+*Build Type*: \`${build_type}\` *(NOKSU/Fourteen)*
 *Tag*: \`${tag}\`
 
 *Duration*: ${elapsed_minutes} Minutes ${elapsed_seconds} Seconds
 
-@MoeKernel #bangkk #ksu
+@MoeKernel #bangkk #noksu
 EOF
 )
 
