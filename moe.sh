@@ -4,23 +4,54 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-
-PATH=$HOME/tc/clang-20.0.0/bin:$PATH
-
+PATH=$PWD/toolchain/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
 
-# export LLVM_DIR=$PWD/toolchain/bin
-export LLVM_DIR=$HOME/tc/clang-20.0.0/bin
-TC_DIR="$HOME/tc/clang-20.0.0"
-export PATH="$TC_DIR/bin:$PATH"
+export LLVM_DIR=$PWD/toolchain/bin
+#export LLVM_DIR=$HOME/tc/clang-20.0.0/bin
+#TC_DIR="$HOME/tc/clang-20.0.0"
+#export PATH="$TC_DIR/bin:$PATH"
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
 DEFCONFIG="vendor/bangkk_defconfig"
 ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
+
+url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
+file_init_clang="$PWD/init_clang.sh"
+
+owo() {
+    local url="$1"
+    local file="$2"
+
+    if [ ! -f "$file" ]; then
+        echo "File $file not found. Downloading..."
+        wget "$url" -O "$file"
+        if [ $? -eq 0 ]; then
+            echo "Download of $file completed."
+            chmod +x "$file"
+            echo "Execute permissions added to $file."
+        else
+            echo "Failed to download $file."
+            return 1
+        fi
+    else
+        echo "File $file already exists."
+    fi
+
+    echo "Executing $file..."
+    "$file"
+    if [ $? -eq 0 ]; then
+        echo "$file executed successfully."
+    else
+        echo "Failed to execute $file."
+    fi
+}
+
+owo "$url_init_clang" "$file_init_clang"
 
 if [[ $1 = "-m" || $1 = "--menu" ]]; then
     mkdir -p out
@@ -50,19 +81,24 @@ LLVM_DIS='${LLVM_DIR}/llvm-dis'
 LLVM_NM='${LLVM_DIR}/llvm-nm'
 LLVM=1
 '
+
 if [[ $1 = "-r" || $1 = "--regen" ]]; then
 	make $ARGS $DEFCONFIG savedefconfig
 	cp out/defconfig arch/arm64/configs/$DEFCONFIG
 	echo -e "\nSuccessfully regenerated defconfig at $DEFCONFIG"
 	exit
 fi
+
 make ${ARGS} O=out $DEFCONFIG moto.config
 make ${ARGS} O=out -j$(nproc)
+
 [ ! -e "out/arch/arm64/boot/Image" ] && \
 echo "  ERROR : image binary not found in any of the specified locations , fix compile!" && \
 exit 1
+
 make O=out ${ARGS} -j$(nproc) INSTALL_MOD_PATH=modules INSTALL_MOD_STRIP=1 modules_install
 echo -e "\nKernel compiled succesfully! Zipping up...\n"
+
 if [ -d "$AK3_DIR" ]; then
 	cp -r $AK3_DIR AnyKernel3
 	git -C AnyKernel3 checkout bangkk &> /dev/null
@@ -70,6 +106,7 @@ elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b bangkk; then
 	echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 	exit 1
 fi
+
 mkdir -p ${modpath}
 kver=$(make kernelversion)
 kmod=$(echo ${kver} | awk -F'.' '{print $3}')
