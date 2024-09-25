@@ -33,7 +33,7 @@ commit_hash=$(echo $commit_head | cut -d ' ' -f 1)
 kernel_version=$(make kernelversion 2>/dev/null)
 
 build_type="release"
-tag="ginkgo_${commit_hash:0:7}_$(date +%Y%m%d)"
+tag="lisa_${commit_hash:0:7}_$(date +%Y%m%d)"
 
 start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
     -d chat_id=$CHAT_ID \
@@ -42,7 +42,7 @@ start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMess
 
 start_time=$(date +%s)
 
-./ksu_update.sh -t stable
+#./ksu_update.sh -t stable
 ./moe.sh
 
 if [[ $? -eq 0 ]]; then
@@ -80,14 +80,14 @@ EOF
 )
 	
     build_info=$(cat <<EOF
-*ginkgo build (#${build_count}) has succeeded*
+*lisa build (#${build_count}) has succeeded*
 *Kernel Version*: ${kernel_version}
 *Build Type*: \`${build_type}\` *(KSU/Fourteen)*
 *Tag*: \`${tag}\`
 
 *Duration*: ${elapsed_minutes} Minutes ${elapsed_seconds} Seconds
 
-@MoeKernel #ginkgo #ksu
+@MoeKernel #lisa
 EOF
 )
 
