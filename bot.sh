@@ -55,7 +55,7 @@ if [[ $? -eq 0 ]]; then
     commit_text=$message_commit
 
 	commit_link=$(cat <<EOF
-[${commit_text}](https://github.com/MoeKernel/android_kernel_motorola_bangkk/commit/${commit_hash})
+[${commit_text}](https://github.com/MoeKernel/android_kernel_motorola_fogos/commit/${commit_hash})
 EOF
 )
 
@@ -80,14 +80,14 @@ EOF
 )
 	
     build_info=$(cat <<EOF
-*bangkk build (#${build_count}) has succeeded*
+*fogos build (#${build_count}) has succeeded*
 *Kernel Version*: ${kernel_version}
 *Build Type*: \`${build_type}\` *(KSU/Fourteen)*
 *Tag*: \`${tag}\`
 
 *Duration*: ${elapsed_minutes} Minutes ${elapsed_seconds} Seconds
 
-@MoeKernel #bangkk #ksu
+@MoeKernel #fogos #ksu
 EOF
 )
 
