@@ -3,7 +3,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0
-ZIPNAME="MoeNOKSU-Dynamic-$(date '+%Y%m%d').zip"
+ZIPNAME="MoeNOKSU-Dynamic-ginkgo-$(date '+%Y%m%d').zip"
 TC_DIR="$HOME/tc/clang-20.0.0"
 GCC_64_DIR="$HOME/tc/aarch64-linux-android-15.0"
 GCC_32_DIR="$HOME/tc/arm-linux-androideabi-15.0"
