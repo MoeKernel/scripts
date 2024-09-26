@@ -3,7 +3,7 @@
 if [[ -f ".env" ]]; then
     source .env
 else
-    echo "Erro: Arquivo .env não encontrado."
+    echo "Error: .env file not found."
     exit 1
 fi
 
@@ -13,7 +13,7 @@ export API_HASH="${API_HASH:-}"
 export BOT_TOKEN="${BOT_TOKEN:-}"
 
 if [[ -z "$CHAT_ID" || -z "$API_ID" || -z "$API_HASH" || -z "$BOT_TOKEN" ]]; then
-    echo "Erro: Variáveis de ambiente não foram definidas corretamente."
+    echo "Error: Environment variables not set correctly."
     exit 1
 fi
 
