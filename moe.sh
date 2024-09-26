@@ -17,8 +17,8 @@ export LLVM_DIR=$PWD/toolchain/bin
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
-DEFCONFIG="vendor/bangkk_defconfig"
-ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
+DEFCONFIG="vendor/fogos_defconfig"
+ZIPNAME="MoeKernel-fogos-$(date '+%Y%m%d-%H%M').zip"
 
 url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
 file_init_clang="$PWD/init_clang.sh"
@@ -101,8 +101,8 @@ echo -e "\nKernel compiled succesfully! Zipping up...\n"
 
 if [ -d "$AK3_DIR" ]; then
 	cp -r $AK3_DIR AnyKernel3
-	git -C AnyKernel3 checkout bangkk &> /dev/null
-elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b bangkk; then
+	git -C AnyKernel3 checkout fogos_ksu &> /dev/null
+elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b fogos_ksu; then
 	echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 	exit 1
 fi
