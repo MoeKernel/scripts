@@ -33,7 +33,7 @@ commit_hash=$(echo $commit_head | cut -d ' ' -f 1)
 kernel_version=$(make kernelversion 2>/dev/null)
 
 build_type="release"
-tag="bangkk_${commit_hash:0:7}_$(date +%Y%m%d)"
+tag="fogos_${commit_hash:0:7}_$(date +%Y%m%d)"
 
 start_message=$(curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
     -d chat_id=$CHAT_ID \
