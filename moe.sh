@@ -4,6 +4,7 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
+TC_DIR="$HOME/tc/clang-17.0.0"
 PATH=$HOME/tc/clang-17.0.0/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
@@ -15,6 +16,14 @@ export LLVM=1
 AK3_DIR="$HOME/AnyKernel3"
 DEFCONFIG="vendor/bangkk_defconfig"
 ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
+
+if ! [ -d "${TC_DIR}" ]; then
+    echo "Clang not found! Cloning to ${TC_DIR}..."
+    if ! git clone --depth=1 https://gitlab.com/moehacker/clang-r487747.git ${TC_DIR}; then
+        echo "Cloning failed! Aborting..."
+        exit 1
+    fi
+fi
 
 if [[ $1 = "-m" || $1 = "--menu" ]]; then
     mkdir -p out
