@@ -4,14 +4,15 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-PATH=$PWD/toolchain/bin:$PATH
+#PATH=$PWD/toolchain/bin:$PATH
+PATH=$HOME/tc/clang-17.0.0/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
 
-export LLVM_DIR=$PWD/toolchain/bin
-#export LLVM_DIR=$HOME/tc/clang-20.0.0/bin
+#export LLVM_DIR=$PWD/toolchain/bin
+export LLVM_DIR=$HOME/tc/clang-17.0.0/bin
 #TC_DIR="$HOME/tc/clang-20.0.0"
 #export PATH="$TC_DIR/bin:$PATH"
 export LLVM=1
@@ -20,8 +21,8 @@ AK3_DIR="$HOME/AnyKernel3"
 DEFCONFIG="vendor/bangkk_defconfig"
 ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
 
-url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
-file_init_clang="$PWD/init_clang.sh"
+#url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
+#file_init_clang="$PWD/init_clang.sh"
 
 owo() {
     local url="$1"
@@ -51,7 +52,7 @@ owo() {
     fi
 }
 
-owo "$url_init_clang" "$file_init_clang"
+#owo "$url_init_clang" "$file_init_clang"
 
 if [[ $1 = "-m" || $1 = "--menu" ]]; then
     mkdir -p out
