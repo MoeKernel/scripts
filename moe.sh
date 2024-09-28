@@ -37,7 +37,7 @@ else
 fi
 
 ARGS='
-CC=clang
+CC=ccache clang
 LD='${LLVM_DIR}/ld.lld'
 ARCH=arm64
 AR='${LLVM_DIR}/llvm-ar'
