@@ -4,13 +4,13 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-TC_DIR="$HOME/tc/clang-17.0.0"
-PATH=$HOME/tc/clang-17.0.0/bin:$PATH
+TC_DIR="$HOME/tc/clang-19.0.0"
+PATH=$HOME/tc/clang-19.0.0/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
-export LLVM_DIR=$HOME/tc/clang-17.0.0/bin
+export LLVM_DIR=$HOME/tc/clang-19.0.0/bin
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
@@ -37,7 +37,7 @@ else
 fi
 
 ARGS='
-CC=ccache clang
+CC=clang
 LD='${LLVM_DIR}/ld.lld'
 ARCH=arm64
 AR='${LLVM_DIR}/llvm-ar'
