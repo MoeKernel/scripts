@@ -4,13 +4,14 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-TC_DIR="$HOME/tc/clang-19.0.0"
-PATH=$HOME/tc/clang-19.0.0/bin:$PATH
+CLANG_VERSION="clang-19.0.0"
+TC_DIR="$HOME/tc/$CLANG_VERSION"
+PATH=$HOME/tc/$CLANG_VERSION/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
-export LLVM_DIR=$HOME/tc/clang-19.0.0/bin
+export LLVM_DIR=$HOME/tc/$CLANG_VERSION/bin
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
