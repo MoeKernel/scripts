@@ -4,54 +4,27 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-PATH=$PWD/toolchain/bin:$PATH
+CLANG_VERSION="clang-17.0.0"
+TC_DIR="$HOME/tc/$CLANG_VERSION"
+PATH=$HOME/tc/$CLANG_VERSION/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
 export ARCH=arm64
 export KBUILD_BUILD_USER=Moe
 export KBUILD_BUILD_HOST=Nyan
-
-export LLVM_DIR=$PWD/toolchain/bin
-#export LLVM_DIR=$HOME/tc/clang-20.0.0/bin
-#TC_DIR="$HOME/tc/clang-20.0.0"
-#export PATH="$TC_DIR/bin:$PATH"
+export LLVM_DIR=$HOME/tc/$CLANG_VERSION/bin
 export LLVM=1
 
 AK3_DIR="$HOME/AnyKernel3"
 DEFCONFIG="vendor/bangkk_defconfig"
-ZIPNAME="MoeKernel-bangkk-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="MoeKernelNOKSU-bangkk-$(date '+%Y%m%d-%H%M').zip"
 
-url_init_clang="https://github.com/MoeKernel/scripts/raw/ksu/init_clang.sh"
-file_init_clang="$PWD/init_clang.sh"
-
-owo() {
-    local url="$1"
-    local file="$2"
-
-    if [ ! -f "$file" ]; then
-        echo "File $file not found. Downloading..."
-        wget "$url" -O "$file"
-        if [ $? -eq 0 ]; then
-            echo "Download of $file completed."
-            chmod +x "$file"
-            echo "Execute permissions added to $file."
-        else
-            echo "Failed to download $file."
-            return 1
-        fi
-    else
-        echo "File $file already exists."
+if ! [ -d "${TC_DIR}" ]; then
+    echo "Clang not found! Cloning to ${TC_DIR}..."
+    if ! git clone --depth=1 https://gitlab.com/moehacker/clang-r487747.git ${TC_DIR}; then
+        echo "Cloning failed! Aborting..."
+        exit 1
     fi
-
-    echo "Executing $file..."
-    "$file"
-    if [ $? -eq 0 ]; then
-        echo "$file executed successfully."
-    else
-        echo "Failed to execute $file."
-    fi
-}
-
-owo "$url_init_clang" "$file_init_clang"
+fi
 
 if [[ $1 = "-m" || $1 = "--menu" ]]; then
     mkdir -p out
@@ -84,7 +57,7 @@ LLVM=1
 
 if [[ $1 = "-r" || $1 = "--regen" ]]; then
 	make $ARGS $DEFCONFIG savedefconfig
-	cp out/defconfig arch/arm64/configs/$DEFCONFIG
+	cp .config arch/arm64/configs/$DEFCONFIG
 	echo -e "\nSuccessfully regenerated defconfig at $DEFCONFIG"
 	exit
 fi
