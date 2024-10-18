@@ -4,7 +4,7 @@
 # Copyright (C) 2024 Shoiya A.
 
 SECONDS=0
-CLANG_VERSION="clang-17.0.0"
+CLANG_VERSION="clang-20.0.0"
 TC_DIR="$HOME/tc/$CLANG_VERSION"
 PATH=$HOME/tc/$CLANG_VERSION/bin:$PATH
 export modpath=AnyKernel3/modules/vendor/lib/modules
