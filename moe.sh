@@ -75,7 +75,7 @@ echo -e "\nKernel compiled succesfully! Zipping up...\n"
 if [ -d "$AK3_DIR" ]; then
 	cp -r $AK3_DIR AnyKernel3
 	git -C AnyKernel3 checkout bangkk &> /dev/null
-elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b bangkk; then
+elif ! git clone -q https://github.com/MoeKernel/AnyKernel3 -b fifteen; then
 	echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 	exit 1
 fi
